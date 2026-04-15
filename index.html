@@ -259,9 +259,85 @@
     .footer-bottom p { font-size:13px; color:rgba(255,255,255,.40); font-weight:500; }
     @media(max-width:1024px){ .footer-top{grid-template-columns:1fr 1fr 1fr} .footer-brand{grid-column:1/-1} }
     @media(max-width:640px){ .footer-top{grid-template-columns:1fr 1fr;gap:28px} .footer-bottom{flex-direction:column;text-align:center} }
+
+    /* BUYER PROFILES */
+    #buyer-profiles { padding:120px 0; background:#ffffff; }
+    .profiles-intro { text-align:center; margin-bottom:72px; }
+    .profiles-tabs { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin-bottom:48px; }
+    .profile-tab { background:var(--off-black); border:1.5px solid var(--border); border-radius:40px; padding:10px 22px; font-size:13px; font-weight:700; color:var(--grey); cursor:pointer; transition:all .2s; letter-spacing:.3px; }
+    .profile-tab.active, .profile-tab:hover { background:var(--blue); border-color:var(--blue); color:#ffffff; }
+    .profiles-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+    .profile-category { background:var(--off-black); border:1px solid var(--border); border-radius:16px; padding:28px 24px; transition:border-color .25s,box-shadow .25s; }
+    .profile-category:hover { border-color:var(--blue); box-shadow:0 8px 32px rgba(26,86,219,.08); }
+    .profile-cat-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+    .profile-cat-icon { font-size:28px; }
+    .profile-cat-title { font-family:var(--font-display); font-size:18px; letter-spacing:1px; text-transform:uppercase; color:var(--white); line-height:1.1; }
+    .profile-roles { display:flex; flex-direction:column; gap:12px; }
+    .profile-role { background:var(--card-bg); border:1px solid var(--border); border-radius:10px; padding:14px 16px; transition:border-color .2s,background .2s; cursor:default; }
+    .profile-role:hover { border-color:var(--sky); background:#f0f8ff; }
+    .profile-role-title { font-size:14px; font-weight:800; color:var(--white); margin-bottom:4px; }
+    .profile-role-desc { font-size:12px; color:var(--grey); line-height:1.5; font-weight:500; }
+    .profile-role-badge { display:inline-block; font-size:10px; font-weight:800; letter-spacing:1px; text-transform:uppercase; padding:2px 8px; border-radius:4px; margin-bottom:6px; }
+    @media(max-width:1100px){ .profiles-grid{grid-template-columns:repeat(2,1fr)} }
+    @media(max-width:640px){ .profiles-grid{grid-template-columns:1fr} #buyer-profiles{padding:80px 0} }
+
+    /* CONTACT MODAL */
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(13,26,62,.7); backdrop-filter:blur(6px); z-index:9999; align-items:center; justify-content:center; padding:20px; }
+    .modal-overlay.active { display:flex; }
+    .modal-box { background:#ffffff; border-radius:20px; padding:48px 44px; max-width:520px; width:100%; position:relative; box-shadow:0 24px 80px rgba(26,86,219,.18); animation:fadeUp .4s cubic-bezier(.16,1,.3,1); }
+    .modal-close { position:absolute; top:18px; right:20px; background:none; border:none; font-size:22px; color:var(--grey); cursor:pointer; line-height:1; padding:4px 8px; border-radius:6px; transition:background .2s,color .2s; }
+    .modal-close:hover { background:var(--off-black); color:var(--white); }
+    .modal-label { font-size:12px; font-weight:800; letter-spacing:3px; text-transform:uppercase; color:var(--sky); margin-bottom:10px; display:block; }
+    .modal-title { font-family:var(--font-display); font-size:38px; letter-spacing:1px; text-transform:uppercase; color:var(--white); margin-bottom:8px; line-height:1; }
+    .modal-sub { font-size:14px; color:var(--grey); font-weight:500; margin-bottom:28px; line-height:1.6; }
+    .modal-form { display:flex; flex-direction:column; gap:16px; }
+    .modal-field { display:flex; flex-direction:column; gap:6px; }
+    .modal-field label { font-size:13px; font-weight:700; color:var(--light-grey); letter-spacing:.3px; }
+    .modal-field input, .modal-field textarea { border:1.5px solid var(--border); border-radius:8px; padding:12px 14px; font-size:14px; font-family:var(--font-body); color:var(--white); background:var(--off-black); outline:none; transition:border-color .2s,box-shadow .2s; resize:vertical; }
+    .modal-field input:focus, .modal-field textarea:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(26,86,219,.10); }
+    .modal-field textarea { min-height:110px; }
+    .modal-submit { background:var(--blue); color:#ffffff; font-size:15px; font-weight:800; letter-spacing:.5px; padding:15px 32px; border-radius:8px; border:none; cursor:pointer; transition:background .2s,transform .2s,box-shadow .2s; margin-top:4px; }
+    .modal-submit:hover { background:var(--sky); transform:translateY(-2px); box-shadow:0 8px 28px rgba(26,86,219,.25); }
+    .modal-success { display:none; text-align:center; padding:20px 0; }
+    .modal-success .success-icon { font-size:48px; margin-bottom:16px; }
+    .modal-success h3 { font-family:var(--font-display); font-size:32px; color:var(--blue); margin-bottom:8px; }
+    .modal-success p { font-size:15px; color:var(--grey); font-weight:500; }
+    @media(max-width:600px){ .modal-box{padding:32px 22px} .modal-title{font-size:28px} }
   </style>
 </head>
 <body>
+
+<!-- CONTACT MODAL -->
+<div class="modal-overlay" id="contactModal" onclick="handleOverlayClick(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">&#x2715;</button>
+    <div id="modalFormWrap">
+      <span class="modal-label">Get In Touch</span>
+      <div class="modal-title">LET'S <span style="color:var(--blue)">TALK</span></div>
+      <p class="modal-sub">Fill in your details and we'll get back to you within 24 hours.</p>
+      <div class="modal-form">
+        <div class="modal-field">
+          <label for="contactName">Your Name *</label>
+          <input type="text" id="contactName" placeholder="e.g. John Smith" />
+        </div>
+        <div class="modal-field">
+          <label for="contactEmail">Your Email *</label>
+          <input type="email" id="contactEmail" placeholder="e.g. john@company.com" />
+        </div>
+        <div class="modal-field">
+          <label for="contactReq">Your Requirement *</label>
+          <textarea id="contactReq" placeholder="Tell us about your ICP, target geography, technology ecosystem, volume, or anything else..."></textarea>
+        </div>
+        <button class="modal-submit" onclick="submitForm()">Send Message &#8594;</button>
+      </div>
+    </div>
+    <div class="modal-success" id="modalSuccess">
+      <div class="success-icon">&#9989;</div>
+      <h3>MESSAGE SENT!</h3>
+      <p>Thank you! Your email client will open shortly.<br>We'll get back to you within 24 hours.</p>
+    </div>
+  </div>
+</div>
 
 <!-- NAVBAR -->
 <nav id="nav">
@@ -280,12 +356,14 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="#services" onclick="closeMenu()">Services</a></li>
       <li><a href="#geographies" onclick="closeMenu()">Coverage</a></li>
+      <li><a href="#buyer-profiles" onclick="closeMenu()">ICP Profiles</a></li>
       <li><a href="#how-it-works" onclick="closeMenu()">How We Work</a></li>
       <li><a href="#engagement" onclick="closeMenu()">Engagement</a></li>
-      <li><a href="#testimonials" onclick="closeMenu()">Results</a></li>
       <li><a href="#faq" onclick="closeMenu()">FAQ</a></li>
+      <li><a href="#buyer-profiles" onclick="closeMenu()">ICP Profiles</a></li>
+      <li><a href="#" onclick="closeMenu(); openModal(event)">Book a Call</a></li>
     </ul>
-    <a href="#cta" class="nav-cta desktop">Book a Call</a>
+    <a href="#" class="nav-cta desktop" onclick="openModal(event)">Book a Call</a>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Toggle menu">
       <span></span><span></span><span></span>
     </button>
@@ -313,7 +391,7 @@
       Smart-Lead IQ is your adhoc campaign execution partner — powering sales teams with 98% accurate, verified B2B contacts across SAP, ERP, Microsoft Dynamics 365, Data Engineering, and AI ecosystems. From North America to EMEA, UK to Australia &amp; NZ, India to globally — we streamline your pipeline.
     </p>
     <div class="hero-actions au d4">
-      <a href="#cta" class="btn-primary">
+      <a href="#" class="btn-primary" onclick="openModal(event)">
         Talk to Our Team
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -343,13 +421,19 @@
     <p class="tech-strip-label">Specialised Data for Leading Technology Ecosystems</p>
     <div class="tech-logos">
       <span class="tech-badge"><span class="tech-badge-icon">🏢</span> SAP</span>
+      <span class="tech-badge"><span class="tech-badge-icon">💎</span> S/4 HANA</span>
       <span class="tech-badge"><span class="tech-badge-icon">⚙️</span> ERP Systems</span>
       <span class="tech-badge"><span class="tech-badge-icon">🔷</span> Microsoft Dynamics 365</span>
       <span class="tech-badge"><span class="tech-badge-icon">🔄</span> Data Migration</span>
       <span class="tech-badge"><span class="tech-badge-icon">🛠️</span> Data Engineering</span>
-      <span class="tech-badge"><span class="tech-badge-icon">🤖</span> AI Contacts</span>
-      <span class="tech-badge"><span class="tech-badge-icon">☁️</span> Cloud Platforms</span>
-      <span class="tech-badge"><span class="tech-badge-icon">📊</span> Business Intelligence</span>
+      <span class="tech-badge"><span class="tech-badge-icon">🤖</span> AI &amp; ML</span>
+      <span class="tech-badge"><span class="tech-badge-icon">☁️</span> Cloud &amp; DevOps</span>
+      <span class="tech-badge"><span class="tech-badge-icon">📊</span> Data Analytics</span>
+      <span class="tech-badge"><span class="tech-badge-icon">📱</span> Mobile App Dev</span>
+      <span class="tech-badge"><span class="tech-badge-icon">🔗</span> Blockchain</span>
+      <span class="tech-badge"><span class="tech-badge-icon">🌐</span> IoT</span>
+      <span class="tech-badge"><span class="tech-badge-icon">🧪</span> QA &amp; Testing</span>
+      <span class="tech-badge"><span class="tech-badge-icon">🔧</span> Embedded Services</span>
     </div>
   </div>
 </div>
@@ -495,6 +579,18 @@
   </div>
 </section>
 
+<!-- BUYER PROFILES -->
+<section id="buyer-profiles">
+  <div class="container">
+    <div class="profiles-intro">
+      <div class="section-label">Who We Target</div>
+      <h2 class="section-title">YOUR IDEAL<br><span class="blue">CUSTOMER PROFILES</span></h2>
+      <p class="section-sub">We build verified contact lists for every seniority level — from C-Suite to Managers — across Technology, Sales, Marketing, and HR functions.</p>
+    </div>
+    <div class="profiles-grid" id="profilesGrid"></div>
+  </div>
+</section>
+
 <!-- CTA -->
 <section id="cta">
   <div class="container">
@@ -503,11 +599,11 @@
       <h2 class="section-title">READY TO POWER<br>YOUR <span class="blue">TEAM'S PIPELINE?</span></h2>
       <p>Talk to us about your ICP, target markets, and goals. Whether you need SAP contacts in North America, Microsoft Dynamics 365 leads in the UK, Data Engineering contacts in India, or AI leads globally — we deliver with 98% accuracy and streamline your campaign execution end-to-end.</p>
       <div class="cta-actions">
-        <a href="mailto:gitanjali@smart-leadiq.com" class="cta-btn-white">
+        <a href="#" class="cta-btn-white" onclick="openModal(event)">
           Get a Free Data Sample
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <a href="#services" class="cta-btn-outline">
+        <a href="#" class="cta-btn-outline" onclick="openModal(event)">
           Explore Services
         </a>
       </div>
@@ -536,12 +632,13 @@
       <div class="footer-col">
         <div class="footer-col-title">Services</div>
         <ul>
-          <li><a href="#services">Global B2B Database</a></li>
-          <li><a href="#services">ICP List Building</a></li>
+          <li><a href="#services">SAP &amp; S/4 HANA Data</a></li>
+          <li><a href="#services">Cloud &amp; DevOps Contacts</a></li>
+          <li><a href="#services">QA &amp; Testing Leads</a></li>
+          <li><a href="#services">Mobile App Dev</a></li>
+          <li><a href="#services">IoT &amp; Blockchain</a></li>
+          <li><a href="#services">AI &amp; Data Analytics</a></li>
           <li><a href="#services">Adhoc Campaign Execution</a></li>
-          <li><a href="#services">Cold Calling Support</a></li>
-          <li><a href="#services">Outreach &amp; Drafts</a></li>
-          <li><a href="#services">Tech-Specific Lists</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -559,7 +656,7 @@
         <div class="footer-col-title">Contact</div>
         <ul>
           <li><a href="mailto:gitanjali@smart-leadiq.com">gitanjali@smart-leadiq.com</a></li>
-          <li><a href="#cta">Book a Call</a></li>
+          <li><a href="#cta" onclick="openModal(event)">Book a Call</a></li>
           <li><a href="#">LinkedIn</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="#engagement">Engagement Models</a></li>
@@ -575,12 +672,15 @@
 
 <script>
 const SERVICES = [
-  { icon: '🗄️', num: '01', title: 'Global B2B Database', desc: 'Access our continuously refreshed database of 50M+ verified B2B contacts spanning 150+ countries and 40+ industries. Specialised lists for SAP, ERP, Microsoft Dynamics 365, Data Engineering, Data Migration, and AI ecosystems — every record includes job title, company, email, direct dial, LinkedIn, firmographics, and more.', highlight: '98% accuracy — 50M+ verified contacts across every market' },
-  { icon: '🎯', num: '02', title: 'ICP-Matched List Building', desc: "Tell us your Ideal Customer Profile and we'll hand-deliver a hyper-targeted, verified contact list — by industry, seniority, company size, geography, tech stack (SAP, Dynamics 365, ERP, AI, Data Engineering), or any other filter. Your team stops searching. They start selling.", highlight: 'Custom lists built and delivered in 24–48 hrs' },
-  { icon: '🌍', num: '03', title: 'Multi-Geography Coverage', desc: "Whether you're targeting enterprises in North America, mid-market in UK & Europe, technology buyers in Australia & NZ, ERP partners across EMEA, IT decision-makers in India, or any market globally — our database has deep, localised, verified coverage built for your territory.", highlight: 'North America · UK · Australia · NZ · EMEA · India · Global' },
-  { icon: '📣', num: '04', title: 'Adhoc Campaign Execution', desc: "Your team owns the strategy — we plug in as your adhoc campaign partner to streamline the entire execution process. Campaign builds, email sequence setup, tool configuration, copy drafting, and outreach management — on demand with no retainers, no long-term agency commitments.", highlight: 'Adhoc execution partner that streamlines your campaign process' },
-  { icon: '📞', num: '05', title: 'Cold Calling Support', desc: "Need extra firepower on the phones? Our trained callers work as an extension of your team — following your playbook, using your messaging, and booking qualified meetings into your reps' calendars across North America, UK, EMEA, Australia, India, and beyond.", highlight: 'Supports your team, follows your process, books your meetings' },
-  { icon: '✉️', num: '06', title: 'Outreach & Drafts', desc: 'Cold email copy, LinkedIn connection messages, follow-up sequences, and sales scripts — drafted for SAP, ERP, Dynamics 365, Data Engineering, AI, and other technology ecosystems. Built for your ICP and each target geography, ready to deploy or run alongside your team.', highlight: 'Tech-personalised copy that converts for every market' },
+  { icon: '🗄️', num: '01', title: 'Global B2B Database', desc: 'Access our continuously refreshed database of 50M+ verified B2B contacts spanning 150+ countries and 40+ industries. Covering SAP, S/4 HANA, ERP, Dynamics 365, Cloud, DevOps, AI, IoT, Blockchain, QA & Testing, Mobile App Development, Data Analytics, Embedded Services and more.', highlight: '98% accuracy — 50M+ verified contacts across every market' },
+  { icon: '🎯', num: '02', title: 'ICP-Matched List Building', desc: "Tell us your Ideal Customer Profile — industry, seniority (CIO, CTO, VP, Director, Manager), company size, geography, tech stack — and we hand-deliver a hyper-targeted verified contact list. Your team stops searching. They start selling.", highlight: 'Custom lists built and delivered in 24–48 hrs' },
+  { icon: '🌍', num: '03', title: 'Multi-Geography Coverage', desc: "Targeting SAP buyers in North America, Cloud decision-makers in UK, DevOps leads in EMEA, Mobile App teams in Australia, or AI contacts in India? Our database has deep localised verified coverage across every territory and technology ecosystem.", highlight: 'North America · UK · Australia · NZ · EMEA · India · Global' },
+  { icon: '📣', num: '04', title: 'Adhoc Campaign Execution', desc: "Your team owns the strategy — we plug in as your adhoc campaign partner to streamline the entire execution process. Campaign builds, email sequence setup, tool configuration, copy drafting, and outreach management — on demand, no retainers, no lock-in.", highlight: 'Adhoc execution partner that streamlines your campaign process' },
+  { icon: '📞', num: '05', title: 'Cold Calling Support', desc: "Need extra firepower on the phones? Our trained callers work as an extension of your team — following your playbook, using your messaging, and booking qualified meetings with CIOs, CTOs, VPs and Directors across North America, UK, EMEA, Australia, India, and beyond.", highlight: 'Supports your team, follows your process, books your meetings' },
+  { icon: '✉️', num: '06', title: 'Outreach & Drafts', desc: 'Cold email copy, LinkedIn messages, follow-up sequences, and sales scripts — crafted for SAP, S/4 HANA, Cloud, DevOps, AI, IoT, QA, Mobile App, Blockchain and Data ecosystems. Personalised for each seniority level and geography, ready to deploy.', highlight: 'Tech-personalised copy that converts for every market' },
+  { icon: '🧪', num: '07', title: 'QA & Testing Contacts', desc: 'Verified contacts across QA leads, Test Architects, Quality Engineering Managers, and VP QA roles globally. Perfect for software testing companies, automation tool vendors, and DevOps platform providers targeting quality-focused decision makers.', highlight: 'QA Managers · Test Architects · VP Engineering · DevOps Leads' },
+  { icon: '📱', num: '08', title: 'Mobile & Cloud App Dev', desc: 'Reach Mobile Application Development leads, Cloud Architects, Platform Engineers, and App Development Directors across enterprise and mid-market. Covering iOS, Android, cross-platform, and cloud-native development ecosystems worldwide.', highlight: 'Mobile Dev Leads · Cloud Architects · Platform Directors' },
+  { icon: '🔗', num: '09', title: 'Emerging Tech — IoT & Blockchain', desc: 'Specialised verified contacts for IoT, Blockchain, and Embedded Systems ecosystems. Find IoT Architects, Blockchain Leads, Embedded Engineers, and Connected Device Directors across manufacturing, automotive, BFSI, and smart infrastructure.', highlight: 'IoT · Blockchain · Embedded · Connected Devices' },
 ];
 
 const GEOGRAPHIES = [
@@ -642,13 +742,79 @@ const FAQS = [
   { q: 'Is there a minimum order or contract commitment?', a: "No. You can come to us for a single list, a one-off campaign sprint, or an ongoing partnership — all without a long-term contract. We work engagement by engagement and earn the next one based on results." },
 ];
 
-const TICKER_ITEMS = ['98% Database Accuracy', 'SAP Contacts', 'Microsoft Dynamics 365', 'ERP Ecosystems', 'Data Engineering', 'AI Contacts', 'Data Migration', 'North America', 'UK & Europe', 'Australia & NZ', 'EMEA Coverage', 'India Hub', '150+ Countries', 'Adhoc Campaign Partner', 'Streamline Your Process', 'ICP List Building', 'No Lock-In'];
+const TICKER_ITEMS = ['98% Database Accuracy', 'SAP & S/4 HANA', 'Microsoft Dynamics 365', 'QA & Testing', 'Mobile App Dev', 'Cloud & DevOps', 'Data Analytics', 'IoT Contacts', 'Blockchain Leads', 'AI & ML', 'Embedded Services', 'Data Migration', 'CIO Contacts', 'CTO Contacts', 'VP & Director Leads', 'C-Suite Data', 'North America', 'UK & Europe', 'Australia & NZ', 'EMEA Coverage', 'India Hub', '150+ Countries', 'No Lock-In'];
+
+const BUYER_PROFILES = [
+  {
+    category: 'C-Suite & Executive',
+    color: '#1a56db',
+    bgColor: 'rgba(26,86,219,0.08)',
+    icon: '👔',
+    roles: [
+      { title: 'CEO', desc: 'Chief Executive Officer — Strategic buyers for enterprise platforms, transformation, and major vendor decisions.' },
+      { title: 'CIO', desc: 'Chief Information Officer — Primary decision-maker for IT investments, ERP, SAP, Cloud & Data initiatives.' },
+      { title: 'CTO', desc: 'Chief Technology Officer — Technical authority for DevOps, AI, IoT, Blockchain, Mobile & Cloud architecture.' },
+      { title: 'CDO', desc: 'Chief Data Officer — Data strategy, analytics, migration, transformation, and governance decisions.' },
+    ]
+  },
+  {
+    category: 'VP & Director Level',
+    color: '#0ea5e9',
+    bgColor: 'rgba(14,165,233,0.08)',
+    icon: '🏆',
+    roles: [
+      { title: 'VP Engineering', desc: 'Owns platform engineering, QA, testing strategy, DevOps pipelines, and development team decisions.' },
+      { title: 'VP IT / Infrastructure', desc: 'Controls infrastructure spend, cloud migration, ERP upgrades, and vendor selection.' },
+      { title: 'Director of Technology', desc: 'Drives technology roadmap, SAP S/4 HANA migrations, and enterprise software evaluation.' },
+      { title: 'Director of Data & Analytics', desc: 'Leads data engineering, analytics platforms, BI tools, and data transformation programmes.' },
+    ]
+  },
+  {
+    category: 'Manager & Practitioner',
+    color: '#059669',
+    bgColor: 'rgba(5,150,105,0.08)',
+    icon: '⚙️',
+    roles: [
+      { title: 'IT Manager', desc: 'Day-to-day tech decisions, software evaluation, and implementation project leads.' },
+      { title: 'QA / Test Manager', desc: 'QA strategy, testing tools, automation platform evaluation, and quality engineering.' },
+      { title: 'Cloud / DevOps Manager', desc: 'Cloud migration execution, DevOps toolchain, CI/CD pipelines, and SRE initiatives.' },
+      { title: 'SAP / ERP Project Manager', desc: 'SAP S/4 HANA, ERP rollout, data migration, and system integration projects.' },
+    ]
+  },
+  {
+    category: 'Sales, Marketing & HR',
+    color: '#d97706',
+    bgColor: 'rgba(217,119,6,0.08)',
+    icon: '📣',
+    roles: [
+      { title: 'VP / Head of Sales', desc: 'Revenue-owning buyers for CRM, sales enablement, data, and outreach technology.' },
+      { title: 'CMO / Marketing Director', desc: 'Marketing technology, campaign tools, data enrichment, and demand generation decisions.' },
+      { title: 'HR Director / CHRO', desc: 'HR tech, talent platforms, workforce analytics, and people data strategy.' },
+      { title: 'Sales / Marketing Manager', desc: 'Hands-on evaluation of tools, lists, campaigns, and outbound execution platforms.' },
+    ]
+  },
+];
 
 // RENDER
 
 const track = document.getElementById('tickerTrack');
 const doubled = [...TICKER_ITEMS, ...TICKER_ITEMS];
 track.innerHTML = doubled.map(i=>`<span class="ticker-item"><span class="ticker-dot">●</span>${i}</span>`).join('');
+
+document.getElementById('profilesGrid').innerHTML = BUYER_PROFILES.map(cat=>`
+  <div class="profile-category">
+    <div class="profile-cat-header">
+      <span class="profile-cat-icon">${cat.icon}</span>
+      <div class="profile-cat-title">${cat.category}</div>
+    </div>
+    <div class="profile-roles">
+      ${cat.roles.map(r=>`
+        <div class="profile-role">
+          <span class="profile-role-badge" style="background:${cat.bgColor};color:${cat.color}">${r.title}</span>
+          <div class="profile-role-desc">${r.desc}</div>
+        </div>`).join('')}
+    </div>
+  </div>`).join('');
 
 document.getElementById('featuresGrid').innerHTML = SERVICES.map(f=>`
   <div class="feat-card">
@@ -711,7 +877,7 @@ document.getElementById('pricingGrid').innerHTML = PLANS.map(p=>`
     <div class="plan-name">${p.name}</div>
     <div class="plan-price"><span class="custom-price">${p.price}</span></div>
     <p class="plan-desc">${p.desc}</p>
-    <a href="#cta" class="plan-btn${p.popular?' blue-btn':''}">${p.cta}</a>
+    <a href="#" onclick="openModal(event)" class="plan-btn${p.popular?' blue-btn':''}">${p.cta}</a>
     <ul class="plan-features">
       ${p.features.map(f=>`<li><span class="plan-check">✓</span>${f}</li>`).join('')}
     </ul>
@@ -753,10 +919,52 @@ function toggleMenu() {
   links.classList.toggle('open');
   btn.classList.toggle('open');
 }
-function closeMenu() {
-  document.getElementById('navLinks').classList.remove('open');
-  document.getElementById('hamburger').classList.remove('open');
+function openModal(e) {
+  if(e) e.preventDefault();
+  document.getElementById('contactModal').classList.add('active');
+  document.getElementById('modalFormWrap').style.display = 'block';
+  document.getElementById('modalSuccess').style.display = 'none';
+  document.getElementById('contactName').value = '';
+  document.getElementById('contactEmail').value = '';
+  document.getElementById('contactReq').value = '';
+  document.body.style.overflow = 'hidden';
 }
+function closeModal() {
+  document.getElementById('contactModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+function handleOverlayClick(e) {
+  if(e.target === document.getElementById('contactModal')) closeModal();
+}
+async function submitForm() {
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+  const req = document.getElementById('contactReq').value.trim();
+  if(!name || !email || !req) { alert('Please fill in all fields.'); return; }
+  const btn = document.querySelector('.modal-submit');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  try {
+    const res = await fetch('https://formspree.io/f/mlgaglla', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, requirement: req })
+    });
+    if(res.ok) {
+      document.getElementById('modalFormWrap').style.display = 'none';
+      document.getElementById('modalSuccess').style.display = 'block';
+    } else {
+      alert('Something went wrong. Please try again or email us directly at gitanjali@smart-leadiq.com');
+      btn.textContent = 'Send Message \u2192';
+      btn.disabled = false;
+    }
+  } catch(err) {
+    alert('Network error. Please try again or email us at gitanjali@smart-leadiq.com');
+    btn.textContent = 'Send Message \u2192';
+    btn.disabled = false;
+  }
+}
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeModal(); });
 </script>
 </body>
 </html>
